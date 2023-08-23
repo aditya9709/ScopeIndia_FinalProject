@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./Contact.css"; // Create a new CSS file for Contact page styling
+import "./Contact.css";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -51,8 +51,11 @@ const Contact = () => {
       <h1>Contact Us</h1>
       <div className="contact-details">
         <p>Email: info@scopeindia.org</p>
-        <p>Phone: +1 (123) 456-7890</p>
-        <p>Address: 1234 Main St, City, Country</p>
+        <p>Phone: 7592939481 (EKM)</p>
+        <p>
+          Address: SCOPE INDIA, Vasanth Nagar Rd, near JLN Metro Station,
+          Kaloor, Kochi, Ernakulam, Kerala 682025
+        </p>
       </div>
       <div className="contact-form">
         <form onSubmit={handleSubmit}>
