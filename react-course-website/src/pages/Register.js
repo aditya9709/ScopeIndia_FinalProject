@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import axios from "axios";
+import "../pages/Register.css";
 
 const Register = () => {
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
+    username: "",
+    fullName: "",
     gender: "",
     dob: "",
     email: "",
@@ -14,7 +15,6 @@ const Register = () => {
     city: "",
     hobbies: [],
     picture: null,
-    password: "",
   });
 
   const [message, setMessage] = useState("");
@@ -40,19 +40,10 @@ const Register = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const form = new FormData();
-    for (const key in formData) {
-      if (key === "picture") {
-        form.append("picture", formData.picture);
-      } else {
-        form.append(key, formData[key]);
-      }
-    }
-
     try {
       const response = await axios.post(
         "http://localhost:5000/auth/register",
-        form
+        formData
       );
       setMessage("Registration successful. Confirmation email sent.");
     } catch (error) {
@@ -61,23 +52,26 @@ const Register = () => {
   };
 
   return (
-    <div>
-      <h1>Registration</h1>
-      <form onSubmit={handleSubmit}>
-        <label>First Name:</label>
+    <div className="registration-container">
+      <h1 className="registration-title">Registration</h1>
+      <form
+        className="registration-form"
+        onSubmit={handleSubmit}
+      >
+        <label>Username:</label>
         <input
           type="text"
-          name="firstName"
-          value={formData.firstName}
+          name="username"
+          value={formData.username}
           onChange={handleInputChange}
           required
         />
 
-        <label>Last Name:</label>
+        <label>Full Name:</label>
         <input
           type="text"
-          name="lastName"
-          value={formData.lastName}
+          name="fullName"
+          value={formData.fullName}
           onChange={handleInputChange}
           required
         />
@@ -149,49 +143,48 @@ const Register = () => {
           required
         />
 
-        <label>Hobbies:</label>
-        <div>
-          <label>
-            <input
-              type="checkbox"
-              name="hobbies"
-              value="reading"
-              onChange={handleInputChange}
-            />{" "}
-            Reading
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              name="hobbies"
-              value="painting"
-              onChange={handleInputChange}
-            />{" "}
-            Painting
-          </label>
-        </div>
-
-        <label>Password:</label>
-        <input
-          type="password"
-          name="password"
-          value={formData.password}
-          onChange={handleInputChange}
-          required
-        />
-
-        <label>Upload Picture:</label>
+        <label>Profile Picture:</label>
         <input
           type="file"
           name="picture"
-          accept="image/*"
           onChange={handleInputChange}
         />
 
-        <button type="submit">Register</button>
+        <div className="registration-hobbies">
+          <label className="hobbies-label">Hobbies:</label>
+          <div className="hobbies-checkboxes">
+            <label className="hobby-label">
+              <input
+                type="checkbox"
+                name="hobbies"
+                value="reading"
+                onChange={handleInputChange}
+              />{" "}
+              Reading
+            </label>
+            <label className="hobby-label">
+              <input
+                type="checkbox"
+                name="hobbies"
+                value="painting"
+                onChange={handleInputChange}
+              />{" "}
+              Painting
+            </label>
+          </div>
+        </div>
+
+        <div className="registration-submit">
+          <button
+            className="submit-button"
+            type="submit"
+          >
+            Register
+          </button>
+        </div>
       </form>
 
-      <p>{message}</p>
+      <p className="registration-message">{message}</p>
     </div>
   );
 };

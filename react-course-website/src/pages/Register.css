@@ -1,0 +1,58 @@
+.registration-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f0f0f0;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.registration-title {
+  color: #007bff; /* Blue */
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.registration-form {
+  display: grid;
+  gap: 15px;
+}
+
+.registration-form label {
+  font-weight: bold;
+  color: #333;
+}
+
+.registration-hobbies {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hobbies-label {
+  color: #333;
+}
+
+.hobby-label {
+  color: #555;
+}
+
+.registration-submit {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.submit-button {
+  background-color: #aa6c39;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.registration-message {
+  text-align: center;
+  margin-top: 20px;
+  color: #555;
+}

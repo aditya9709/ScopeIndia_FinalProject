@@ -6,7 +6,7 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
-import Dashboard from "./pages/Dashboard";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
@@ -34,8 +34,12 @@ function App() {
           element={<Login />}
         />
         <Route
-          path="/dashboard"
-          element={<Dashboard />}
+          path="/profile"
+          element={<Profile />}
+        />
+        <Route
+          path="/update-profile"
+          element={<Profile />}
         />
       </Routes>
     </Router>

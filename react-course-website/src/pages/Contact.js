@@ -20,7 +20,6 @@ const Contact = () => {
     event.preventDefault();
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length === 0) {
-      // Send email logic here
       alert("Email sent successfully!");
     } else {
       setErrors(validationErrors);

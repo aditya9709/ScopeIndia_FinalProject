@@ -3,11 +3,11 @@ const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
     user: "burner791834@gmail.com",
-    pass: "",
+    pass: "vsfqznpepbnanojn",
   },
 });
 
-function mailsender(to, subject, name) {
+function mailsender(to, subject, fullName, temporaryPassword) {
   var mailoptions = {
     from: "burner791834@gmail.com",
     to: to,
@@ -43,16 +43,17 @@ function mailsender(to, subject, name) {
           </style>
         </head>
         <body>
-          <h1>Welcome ${name}to our website!</h1>
+          <h1>Welcome ${fullName} to our website!</h1>
           <p>Thank you for registering with us. We are excited to have you on board.</p>
+          <p>Your temporary password is: ${temporaryPassword}</p>
         </body>
         </html>`,
   };
   transporter.sendMail(mailoptions, (err, res) => {
     if (err) {
-      return err.message;
+      console.error("Error sending email:", err);
     } else {
-      return "sucess";
+      console.log("Email sent successfully:", res.response);
     }
   });
 }

@@ -3,6 +3,10 @@
   background-color: #f0f0f0;
 }
 
+.contact-container h1 {
+  color: #002855;
+}
+
 .contact-details {
   margin-bottom: 2rem;
 }
