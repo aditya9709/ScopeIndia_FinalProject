@@ -2,9 +2,10 @@ const router = require("express").Router();
 const multer = require("multer");
 const path = require("path");
 const UserModel = require("../models/user");
-const mailsender = require("../common/mail");
+const mail = require("../common/mail");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const nodemail = require("nodemailer");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -17,6 +18,25 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
+
+router.post("/contactform", (req, res) => {
+  const name = req.body.name;
+  const subject = req.body.subject;
+  const message = req.body.message;
+  const email = req.body.email;
+  try {
+    mail.contactmail(email, subject, name, message);
+    res.json({
+      success: true,
+      message: "Message succesfuly sent",
+    });
+  } catch (e) {
+    res.json({
+      success: false,
+      message: "Message not sent",
+    });
+  }
+});
 
 router.post("/register", upload.single("picture"), async (req, res) => {
   try {
@@ -34,6 +54,7 @@ router.post("/register", upload.single("picture"), async (req, res) => {
     const newUser = new UserModel({
       username: req.body.username,
       fullName: req.body.fullName,
+      email: req.body.email,
       phoneNumber: req.body.phoneNumber,
       country: req.body.country,
       state: req.body.state,
@@ -44,16 +65,22 @@ router.post("/register", upload.single("picture"), async (req, res) => {
 
     await newUser.save();
 
-    mailsender(
+    mail.mailsender(
       req.body.email,
       "Welcome message",
       req.body.fullName,
       temporaryPassword
     );
 
+    const token = jwt.sign(
+      { userId: newUser._id },
+      "184f235ed3d6a449480ee3e22ea09bd61dc76519e75234a132ce40a1a8ff4963"
+    );
+
     return res.json({
       success: true,
       message: "Successfully registered",
+      token,
     });
   } catch (error) {
     console.log(error);
@@ -63,12 +90,10 @@ router.post("/register", upload.single("picture"), async (req, res) => {
     });
   }
 });
-
 router.post("/login", async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    // Find the user by their username
     const user = await UserModel.findOne({ username });
 
     if (!user) {
@@ -108,7 +133,21 @@ router.post("/login", async (req, res) => {
 
 router.get("/profile", async (req, res) => {
   try {
-    const userId = req.user.userId; // Assuming you're extracting user ID from JWT
+    const token = req.headers.authorization.split(" ")[1]; //
+
+    if (!token) {
+      return res.json({
+        success: false,
+        message: "Token was not provided",
+      });
+    }
+
+    const decodedToken = jwt.verify(
+      token,
+      "184f235ed3d6a449480ee3e22ea09bd61dc76519e75234a132ce40a1a8ff4963"
+    );
+    const userId = decodedToken.userId;
+
     const user = await UserModel.findById(userId);
 
     if (!user) {
@@ -118,7 +157,6 @@ router.get("/profile", async (req, res) => {
       });
     }
 
-    // Send user profile data
     return res.json({
       success: true,
       user: {
@@ -141,11 +179,23 @@ router.get("/profile", async (req, res) => {
   }
 });
 
-router.put("/update-profile", upload.single("picture"), async (req, res) => {
+router.post("/update-profile", upload.single("picture"), async (req, res) => {
   try {
-    const userId = req.user.userId; // Assuming you're extracting user ID from JWT
-    const user = await UserModel.findById(userId);
+    const token = req.headers.authorization.split(" ")[1];
+    if (!token) {
+      return res.json({
+        success: false,
+        message: "Token was not provided",
+      });
+    }
 
+    const decodedToken = jwt.verify(
+      token,
+      "184f235ed3d6a449480ee3e22ea09bd61dc76519e75234a132ce40a1a8ff4963"
+    );
+    const userId = decodedToken.userId;
+
+    const user = await UserModel.findById(userId);
     if (!user) {
       return res.json({
         success: false,
@@ -153,12 +203,12 @@ router.put("/update-profile", upload.single("picture"), async (req, res) => {
       });
     }
 
-    // Update user profile data
     user.fullName = req.body.fullName || user.fullName;
     user.phoneNumber = req.body.phoneNumber || user.phoneNumber;
     user.city = req.body.city || user.city;
     user.state = req.body.state || user.state;
     user.country = req.body.country || user.country;
+    user.password = req.body.newPassword || user.newPassword;
 
     if (req.file) {
       user.picture = req.file.path;
@@ -169,6 +219,16 @@ router.put("/update-profile", upload.single("picture"), async (req, res) => {
     return res.json({
       success: true,
       message: "Profile updated successfully",
+      user: {
+        username: user.username,
+        fullName: user.fullName,
+        email: user.email,
+        phoneNumber: user.phoneNumber,
+        city: user.city,
+        state: user.state,
+        country: user.country,
+        picture: user.picture,
+      },
     });
   } catch (error) {
     console.error(error);
@@ -178,5 +238,4 @@ router.put("/update-profile", upload.single("picture"), async (req, res) => {
     });
   }
 });
-
 module.exports = router;

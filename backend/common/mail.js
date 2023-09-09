@@ -58,4 +58,57 @@ function mailsender(to, subject, fullName, temporaryPassword) {
   });
 }
 
-module.exports = mailsender;
+function contactmail(to, subject, fullName, message) {
+  var mailoptions = {
+    from: "burner791834@gmail.com",
+    to: "aditya.menon7@gmail.com",
+    subject: subject,
+    html: `<!DOCTYPE html>
+        <html>
+        <head>
+          <title>User Enquiry</title>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+              background-color: #f0bd9d;
+              padding: 20px;
+            }
+            h1 {
+              color: #db4340;
+            }
+            p {
+              font-size: 16px;
+              line-height: 1.5;
+            }
+            a {
+              display: inline-block;
+              padding: 10px 20px;
+              background-color: #db4340;
+              colcontentor: #fff;
+              text-decoration: none;
+              border-radius: 4px;
+            }
+          </style>
+        </head>
+        <body>
+        <ul>
+        <li>name: ${fullName}</li>
+        <li>subject: ${subject}</li>
+        <li>message: ${message}</li>
+        <li>enquiry email<: ${to}</li>
+        </ul>
+        </body>
+        </html>`,
+  };
+  transporter.sendMail(mailoptions, (err, res) => {
+    if (err) {
+      console.error("Error sending email:", err);
+    } else {
+      console.log("Email sent successfully:", res.response);
+    }
+  });
+}
+
+module.exports = { mailsender, contactmail };

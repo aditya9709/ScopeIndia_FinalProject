@@ -6,6 +6,8 @@ const cors = require("cors");
 const authroute = require("./routes/auth");
 const nodemailer = require("nodemailer");
 const jsonwebtoken = require("jsonwebtoken");
+const path = require("path");
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 const url =
   "mongodb+srv://adityamenon7:menon97@cluster0.f77m2e1.mongodb.net/?retryWrites=true&w=majority";
 const bcrypt = require("bcrypt");

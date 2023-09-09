@@ -70,7 +70,7 @@ const Profile = () => {
     formData.append("newPassword", newPassword);
 
     try {
-      const response = await axios.put(
+      const response = await axios.post(
         "http://localhost:5000/auth/update-profile",
         formData,
         {
@@ -78,7 +78,6 @@ const Profile = () => {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
             "Content-Type": "multipart/form-data",
           },
-          params: passwordData,
         }
       );
 
@@ -132,9 +131,6 @@ const Profile = () => {
               )}
             </p>
             <p>
-              <strong>Email:</strong> {userProfile.email}
-            </p>
-            <p>
               <strong>Phone Number:</strong>{" "}
               {editing ? (
                 <input
@@ -151,7 +147,6 @@ const Profile = () => {
               <strong>Location:</strong>{" "}
               {`${userProfile.city}, ${userProfile.state}, ${userProfile.country}`}
             </p>
-            {/* Password Change Fields */}
             {editing && (
               <div>
                 <p>

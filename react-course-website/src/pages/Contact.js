@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./Contact.css";
+import axios from "axios";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -20,7 +21,12 @@ const Contact = () => {
     event.preventDefault();
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length === 0) {
-      alert("Email sent successfully!");
+      axios.post("http://localhost:5000/auth/contactform", {
+        name: formData.name,
+        email: formData.email,
+        subject: formData.subject,
+        message: formData.message,
+      });
     } else {
       setErrors(validationErrors);
     }

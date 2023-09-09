@@ -32,20 +32,26 @@ const Register = () => {
       }
     } else if (type === "file") {
       setFormData({ ...formData, picture: files[0] });
+      console.log(files[0]);
     } else {
       setFormData({ ...formData, [name]: value });
     }
   };
 
   const handleSubmit = async (event) => {
+    const form = new FormData();
+    for (let key in formData) {
+      form.append(key, formData[key]);
+    }
     event.preventDefault();
 
     try {
       const response = await axios.post(
         "http://localhost:5000/auth/register",
-        formData
+        form
       );
       setMessage("Registration successful. Confirmation email sent.");
+      localStorage.setItem("token", response.data.token);
     } catch (error) {
       setMessage("Unable to register. Please try again.");
     }
