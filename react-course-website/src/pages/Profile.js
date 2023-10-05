@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./Profile.css";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const [userProfile, setUserProfile] = useState({});
@@ -13,7 +14,12 @@ const Profile = () => {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const navigate = useNavigate();
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
   const courses = [
     { id: 1, name: "Python", duration: "2 months", fee: "Rs. 30000" },
     { id: 2, name: "Javascript", duration: "3 months", fee: "Rs. 40000" },
@@ -123,14 +129,14 @@ const Profile = () => {
       if (response.data.success) {
         console.log("Course signed up successfully!");
 
-        setUserProfile({
-          ...userProfile,
+        setUserProfile((prevProfile) => ({
+          ...prevProfile,
           selectedCourse: {
             name: selectedCourse.name,
             duration: selectedCourse.duration,
             fee: selectedCourse.fee,
           },
-        });
+        }));
       } else {
         console.log("Failed to sign up for the course.");
       }
@@ -243,6 +249,12 @@ const Profile = () => {
                 Edit Profile
               </button>
             )}
+            <button
+              className="logout-button"
+              onClick={handleLogout}
+            >
+              Logout
+            </button>
           </div>
         </div>
       )}

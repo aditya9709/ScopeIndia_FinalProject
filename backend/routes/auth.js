@@ -210,6 +210,7 @@ router.post("/signup", async (req, res) => {
     }
 
     user.selectedCourse = courseId;
+
     await user.save();
 
     return res.json({
@@ -224,6 +225,7 @@ router.post("/signup", async (req, res) => {
     });
   }
 });
+
 router.post("/update-profile", upload.single("picture"), async (req, res) => {
   try {
     const token = req.headers.authorization.split(" ")[1];

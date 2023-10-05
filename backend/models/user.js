@@ -34,6 +34,10 @@ const userSchema = new mongoose.Schema({
   picture: {
     type: String,
   },
+  selectedCourse: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Course",
+  },
 });
 
 userSchema.pre("save", async function (next) {
