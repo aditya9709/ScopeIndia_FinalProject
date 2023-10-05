@@ -6,6 +6,7 @@ const mail = require("../common/mail");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const nodemail = require("nodemailer");
+const Course = require("../models/course");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -131,6 +132,22 @@ router.post("/login", async (req, res) => {
   }
 });
 
+router.get("/courses", async (req, res) => {
+  try {
+    const courses = await Course.find({});
+    return res.json({
+      success: true,
+      courses,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Error fetching courses",
+    });
+  }
+});
+
 router.get("/profile", async (req, res) => {
   try {
     const token = req.headers.authorization.split(" ")[1]; //
@@ -179,6 +196,34 @@ router.get("/profile", async (req, res) => {
   }
 });
 
+router.post("/signup", async (req, res) => {
+  try {
+    const { courseId, userId } = req.body;
+
+    const user = await UserModel.findById(userId);
+
+    if (!user) {
+      return res.json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    user.selectedCourse = courseId;
+    await user.save();
+
+    return res.json({
+      success: true,
+      message: "Course signed up successfully!",
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Error signing up for the course",
+    });
+  }
+});
 router.post("/update-profile", upload.single("picture"), async (req, res) => {
   try {
     const token = req.headers.authorization.split(" ")[1];
